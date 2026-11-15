@@ -1,12 +1,12 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
-# Install dependencies sistem dan ekstensi PHP yang dibutuhkan (MySQL & PostgreSQL support)
+# Install dependencies sistem, tool docker-php-extension-installer, dan ekstensi PHP
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
-    libpq-dev \
-    libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip bcmath opcache \
+    && install-php-extensions pdo_mysql pdo_pgsql zip bcmath opcache \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
